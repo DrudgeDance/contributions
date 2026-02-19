@@ -1,0 +1,21 @@
+# Build artifacts
+/target/
+**/target/
+**/dist/
+
+# Cargo lock (not needed for reproduction examples)
+Cargo.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Trunk staging
+**/.stage/

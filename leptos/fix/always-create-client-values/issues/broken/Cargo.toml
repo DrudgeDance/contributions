@@ -1,0 +1,16 @@
+[package]
+name = "ssr-feature-safety-broken"
+version = "0.1.0"
+edition = "2021"
+
+# Identical to issues/clean/ but with tachys/ssr enabled.
+# This simulates what happens when any workspace dep (e.g. radix-leptos)
+# enables leptos/ssr via feature unification.
+# trunk serve --port 8101 → blank page + panic
+
+[dependencies]
+leptos = { version = "0.8.16", features = ["csr"] }
+console_error_panic_hook = "0.1"
+
+# This is the only difference from issues/clean/Cargo.toml
+tachys = { version = "0.2", features = ["ssr"] }

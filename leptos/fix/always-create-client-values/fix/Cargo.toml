@@ -1,0 +1,37 @@
+[package]
+name = "ssr-feature-safety-fixed"
+version = "0.1.0"
+edition = "2021"
+
+# Same as issues/broken/ (tachys/ssr active) but patched via fork.
+# trunk serve --port 8102
+
+[dependencies]
+leptos = { version = "0.8.16", features = ["csr"] }
+console_error_panic_hook = "0.1"
+
+# Same SSR trigger as issues/broken/ — this would normally cause the panic
+tachys = { version = "0.2", features = ["ssr"] }
+
+# Patch all leptos crates to use the fix branch
+[patch.crates-io]
+leptos = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+tachys = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_macro = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_server = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_config = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_dom = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_hot_reload = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+reactive_graph = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+any_spawner = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_router = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_router_macro = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+leptos_meta = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+either_of = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+next_tuple = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+hydration_context = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+const_str_slice_concat = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+reactive_stores = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+reactive_stores_macro = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+oco_ref = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }
+throw_error = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/always-create-client-values" }

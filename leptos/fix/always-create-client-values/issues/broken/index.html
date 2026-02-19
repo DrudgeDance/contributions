@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Tachys SSR Feature Safety — Broken</title>
+    <link data-trunk rel="rust" data-wasm-opt="z" />
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        #variant-banner {
+            padding: 8px 16px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        #loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #666;
+            font-size: 18px;
+        }
+
+        #loading .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #2196f3;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #panic-display {
+            display: none;
+            margin: 40px auto;
+            max-width: 700px;
+            padding: 24px;
+            background: #fff5f5;
+            border: 2px solid #e53e3e;
+            border-radius: 12px;
+        }
+
+        #panic-display h2 {
+            color: #e53e3e;
+            margin-top: 0;
+        }
+
+        #panic-display pre {
+            background: #1a1a2e;
+            color: #ff6b6b;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        #panic-display .hint {
+            margin-top: 16px;
+            padding: 12px;
+            background: #fffbdb;
+            border: 1px solid #f0e68c;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        // Intercept WASM panics and display them visually on the page
+        window.addEventListener('error', function (e) {
+            if (e.message && e.message.includes('unreachable')) {
+                showPanic('WASM unreachable instruction — likely a Rust panic');
+            }
+        });
+
+        function showPanic(msg) {
+            var loading = document.getElementById('loading');
+            var display = document.getElementById('panic-display');
+            var detail = document.getElementById('panic-detail');
+            if (loading) loading.style.display = 'none';
+            if (display) display.style.display = 'block';
+            if (detail) detail.textContent = msg;
+        }
+
+        // Hook into console.error to catch the panic message from console_error_panic_hook
+        var originalConsoleError = console.error;
+        console.error = function () {
+            originalConsoleError.apply(console, arguments);
+            var msg = Array.from(arguments).join(' ');
+            if (msg.includes('panicked at') || msg.includes('callback removed')) {
+                showPanic(msg);
+            }
+        };
+
+        // Auto-hide loading spinner when Leptos mounts content into the body
+        document.addEventListener('DOMContentLoaded', function () {
+            var observer = new MutationObserver(function (mutations) {
+                for (var m of mutations) {
+                    for (var node of m.addedNodes) {
+                        // Leptos mounts a <div> (or other element) into body
+                        if (node.nodeType === 1 && node.id !== 'loading' && node.id !== 'panic-display') {
+                            document.getElementById('loading').style.display = 'none';
+                            observer.disconnect();
+                            return;
+                        }
+                    }
+                }
+            });
+            observer.observe(document.body, { childList: true });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="variant-banner" style="background: #e53e3e; color: white;">
+        BROKEN — tachys/ssr active · stock Leptos 0.8.16 · :8101
+    </div>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <span>Loading WASM application…</span>
+    </div>
+
+    <div id="panic-display">
+        <h2>💥 WASM Panic</h2>
+        <p>The application loaded but <strong>panicked at runtime</strong> due to the SSR feature unification bug.</p>
+        <pre id="panic-detail"></pre>
+        <div class="hint">
+            <strong>Root cause:</strong> <code>tachys/ssr</code> feature is active, causing
+            <code>on()</code> to create event handlers with <code>cb: None</code>.<br />
+            Run <code>cargo tree -e features -i tachys | grep ssr</code> to confirm.
+        </div>
+    </div>
+</body>
+
+</html>

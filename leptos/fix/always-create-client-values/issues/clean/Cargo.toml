@@ -1,0 +1,11 @@
+[package]
+name = "ssr-feature-safety-clean"
+version = "0.1.0"
+edition = "2021"
+
+# Clean baseline — no SSR feature, everything works.
+# trunk serve --port 8100
+
+[dependencies]
+leptos = { version = "0.8.16", features = ["csr"] }
+console_error_panic_hook = "0.1"
