@@ -1,0 +1,32 @@
+[package]
+name = "ssr-diagnostic-test"
+version = "0.1.0"
+edition = "2021"
+
+# Tests the improved SSR panic diagnostic message from:
+# DrudgeDance/leptos@fix/improve-ssr-panic-diagnostic
+#
+# trunk serve --port 8103 → panic with actionable diagnostic
+
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+console_error_panic_hook = "0.1"
+
+# Enable tachys/ssr to trigger the panic (simulates feature unification)
+tachys = { version = "0.2", features = ["ssr"] }
+
+# Patch entire leptos workspace from the diagnostic branch to avoid version mismatch
+[patch.crates-io]
+leptos = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+tachys = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+reactive_graph = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+leptos_macro = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+leptos_server = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+leptos_config = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+server_fn = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+server_fn_macro = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+hydration_context = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+any_spawner = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+throw_error = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+or_poisoned = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }
+oco_ref = { git = "https://github.com/DrudgeDance/leptos.git", branch = "fix/improve-ssr-panic-diagnostic" }

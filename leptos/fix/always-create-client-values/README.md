@@ -1,5 +1,7 @@
 # fix/always-create-client-values
 
+> **⚠️ Deprecated.** The maintainer accepted only the diagnostic improvement from this work. See [`leptos/diagnostic/`](../diagnostic/README.md) for the accepted fix and updated branch.
+
 **Bug:** Cargo feature unification silently poisons CSR apps when any dependency
 enables `leptos/ssr`, causing all `on:click`, `use:*`, and `prop:*` handlers to
 panic at runtime.
